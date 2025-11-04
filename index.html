@@ -1,0 +1,45 @@
+<!doctype html>
+
+<link href=default.css rel=stylesheet>
+
+<title>Star map demo</title>
+
+<h1>Star map</h1>
+
+<form class="js-data-form">
+	<label>Enter map data
+		<textarea name="data"></textarea>
+	</label>
+	<button>Render</button>
+</form>
+
+<canvas width=200 height=200></canvas>
+
+<script src=fabric.min.js></script>
+
+<script src=dom.js></script>
+<script src=canvas.js></script>
+
+<script>
+	var starmap = new Starmap($$('canvas')[0])
+
+	var initialData = localStorage.getItem('map-data') || '{"stars": [\n\
+{"x": 0, "y": 0, "name": "Sol", "color": "white" },\n\
+{"x": 80, "y": 80, "name": "Alpha Centauri", "color": "blue" },\n\
+{"x": -50, "y": 200, "name": "Augustgrad", "color": "green" }\n\
+],"routes": [\n\
+{ "from": "Sol", "to": "Alpha Centauri", "weight": 2, "twoWay": true },\n\
+{ "from": "Sol", "to": "Augustgrad" }\n\
+]}'
+
+	$$('.js-data-form')
+		.on('submit', function(event) {
+			var form = event.target
+			event.preventDefault()
+			var data = $('[name=data]', form)[0].value
+			localStorage.setItem('map-data', data)
+			starmap.render(JSON.parse(data))
+		})
+		.find('textarea')[0].value = initialData
+	starmap.render(JSON.parse(initialData))
+</script>
